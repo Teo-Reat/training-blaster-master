@@ -6,7 +6,7 @@ public class PlayerControllerEinharr : MonoBehaviour
 {
     public float moveSpeed = 3f; // Скорость движения персонажа
     public float acceleration = 3f; // Ускорение персонажа
-    public float jumpForce = 3f; // Сила прыжка
+    public float jumpForce = 1f; // Сила прыжка
     public float groundRaycastDistance = 0.2f; // Расстояние, на которое выпускается рэйкаст для проверки земли
     public float wallRaycastDistance = 0.2f; // Расстояние, на которое выпускается рэйкаст для проверки стены
 
