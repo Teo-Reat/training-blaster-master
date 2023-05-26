@@ -486,6 +486,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character_Male_NoFace_01
       objectReference: {fileID: 0}
+    - target: {fileID: 1483886494116078, guid: 1617cfd7d856042459cec623d111378d, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 4121957669690104, guid: 1617cfd7d856042459cec623d111378d, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -1711,6 +1715,7 @@ GameObject:
   - component: {fileID: 1732479551}
   - component: {fileID: 1732479550}
   - component: {fileID: 1732479553}
+  - component: {fileID: 1732479554}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1798,6 +1803,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 2019019778}
   smoothSpeed: 2.8
+--- !u!114 &1732479554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732479549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 232fb0fe7c032004490d6ff69a6baff0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerColor: {r: 0, g: 1, b: 1, a: 1}
+  hangableColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1741653068 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1346524299210880, guid: fcc4229f634be704aa0dd336ad33c2b5, type: 3}
