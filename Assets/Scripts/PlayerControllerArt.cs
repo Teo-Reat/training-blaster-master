@@ -16,8 +16,8 @@ public class PlayerControllerArt : MonoBehaviour
     private bool onSlope;
     private Rigidbody playerRb;
     private CapsuleCollider playerCollider;
-    private Vector3 targetVelocity; //куда хотим отправить
-    private Vector3 Velocity; // куда движется сейчас
+    private Vector3 targetVelocity; //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+    private Vector3 Velocity; // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
     private Vector3 groundNormal;
     private float shellRadius = .02f;
     private float jumpForceMax;
@@ -60,7 +60,7 @@ public class PlayerControllerArt : MonoBehaviour
     {
         var tryingToJump = direction.y > jumpForceMax;
         var isHitAngleOk = true;
-        var distance = direction.magnitude; // расстояние
+        var distance = direction.magnitude; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         if (distance > minMoveDistance)
         {
             var directionOnYMove = !tryingToJump && isYDirection ? Vector3.down : direction;
