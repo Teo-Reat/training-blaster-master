@@ -616,7 +616,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 879093462}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3015c5130e15d85408dae886e15c9a4e, type: 3}
   m_Name: 
@@ -626,6 +626,24 @@ MonoBehaviour:
   gravityForce: 1
   MinGroundNormalY: 0.65
   isDashing: 0
+--- !u!114 &879093470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 879093462}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b8d32ce4f595504fb9efb3025f3760e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movementSpeed: 3
+  jumpForce: 6
+  MinGroundNormalY: 0.65
+  onGround: 0
+  onSlope: 0
+  velocity: {x: 0, y: 0, z: 0}
 --- !u!1 &1517075938 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1346524299210880, guid: fcc4229f634be704aa0dd336ad33c2b5, type: 3}
