@@ -39,10 +39,6 @@ public class PlayerControllerTeo : MonoBehaviour
             Debug.Log("Space");
             foreach (var jet in jets)
             {
-                if (true)
-                {
-
-                }
                 Rigidbody jetDrive = GetComponent<Rigidbody>();
                 jetDrive.AddForce(Vector3.up * 1000, ForceMode.Impulse);
             }
