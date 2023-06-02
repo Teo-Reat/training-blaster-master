@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class PlayerControllerEinharr : MonoBehaviour
 {
-    public float moveSpeed = 3f; // Скорость движения персонажа
-    public float acceleration = 3f; // Ускорение персонажа
-    public float jumpForce = 1f; // Сила прыжка
-    public float groundRaycastDistance = 0.2f; // Расстояние, на которое выпускается рэйкаст для проверки земли
-    public float wallRaycastDistance = 0.2f; // Расстояние, на которое выпускается рэйкаст для проверки стены
+    public float moveSpeed = 3f; // РЎРєРѕСЂРѕСЃС‚СЊ РґРІРёР¶РµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶Р°
+    public float acceleration = 3f; // РЈСЃРєРѕСЂРµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р°
+    public float jumpForce = 1f; // РЎРёР»Р° РїСЂС‹Р¶РєР°
+    public float groundRaycastDistance = 0.2f; // Р Р°СЃСЃС‚РѕСЏРЅРёРµ, РЅР° РєРѕС‚РѕСЂРѕРµ РІС‹РїСѓСЃРєР°РµС‚СЃСЏ СЂСЌР№РєР°СЃС‚ РґР»СЏ РїСЂРѕРІРµСЂРєРё Р·РµРјР»Рё
+    public float wallRaycastDistance = 0.2f; // Р Р°СЃСЃС‚РѕСЏРЅРёРµ, РЅР° РєРѕС‚РѕСЂРѕРµ РІС‹РїСѓСЃРєР°РµС‚СЃСЏ СЂСЌР№РєР°СЃС‚ РґР»СЏ РїСЂРѕРІРµСЂРєРё СЃС‚РµРЅС‹
 
-    private PlayerHangableDetector hangableDetector; //Ссылка на виселко и цеплялко детектор
+    private PlayerHangableDetector hangableDetector; //РЎСЃС‹Р»РєР° РЅР° РІРёСЃРµР»РєРѕ Рё С†РµРїР»СЏР»РєРѕ РґРµС‚РµРєС‚РѕСЂ
 
     private Rigidbody rb;
     private Animator animator;
@@ -33,42 +33,42 @@ public class PlayerControllerEinharr : MonoBehaviour
 
     private void Update()
     {
-        // Получаем инпут от игрока
+        // РџРѕР»СѓС‡Р°РµРј РёРЅРїСѓС‚ РѕС‚ РёРіСЂРѕРєР°
         float moveInput = Input.GetAxis("Horizontal");
 
-        // Проверяем окружение персонажа с помощью рэйкастов
+        // РџСЂРѕРІРµСЂСЏРµРј РѕРєСЂСѓР¶РµРЅРёРµ РїРµСЂСЃРѕРЅР°Р¶Р° СЃ РїРѕРјРѕС‰СЊСЋ СЂСЌР№РєР°СЃС‚РѕРІ
         CheckSurroundings();
 
-        //Управление
+        //РЈРїСЂР°РІР»РµРЅРёРµ
 
-        // Вычисляем вектор движения только по оси X, потому что иначе он будет влиять на скорость падения персонажа(данные получены горьким опытом)
+        // Р’С‹С‡РёСЃР»СЏРµРј РІРµРєС‚РѕСЂ РґРІРёР¶РµРЅРёСЏ С‚РѕР»СЊРєРѕ РїРѕ РѕСЃРё X, РїРѕС‚РѕРјСѓ С‡С‚Рѕ РёРЅР°С‡Рµ РѕРЅ Р±СѓРґРµС‚ РІР»РёСЏС‚СЊ РЅР° СЃРєРѕСЂРѕСЃС‚СЊ РїР°РґРµРЅРёСЏ РїРµСЂСЃРѕРЅР°Р¶Р°(РґР°РЅРЅС‹Рµ РїРѕР»СѓС‡РµРЅС‹ РіРѕСЂСЊРєРёРј РѕРїС‹С‚РѕРј)
         Vector3 moveDirection = new Vector3(moveInput, 0f, 0f);
 
         MoveCharacter(moveDirection, moveInput);
 
-        // Если персонаж на земле и нажата клавиша прыжка, выполняем прыжок
+        // Р•СЃР»Рё РїРµСЂСЃРѕРЅР°Р¶ РЅР° Р·РµРјР»Рµ Рё РЅР°Р¶Р°С‚Р° РєР»Р°РІРёС€Р° РїСЂС‹Р¶РєР°, РІС‹РїРѕР»РЅСЏРµРј РїСЂС‹Р¶РѕРє
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
             Jump();
         }
 
-        // Проверяем, если персонаж на земле, рядом стена и нажата клавиша движения и клавиша прыжка. Если звезды сошлись - включаем бег по стене
+        // РџСЂРѕРІРµСЂСЏРµРј, РµСЃР»Рё РїРµСЂСЃРѕРЅР°Р¶ РЅР° Р·РµРјР»Рµ, СЂСЏРґРѕРј СЃС‚РµРЅР° Рё РЅР°Р¶Р°С‚Р° РєР»Р°РІРёС€Р° РґРІРёР¶РµРЅРёСЏ Рё РєР»Р°РІРёС€Р° РїСЂС‹Р¶РєР°. Р•СЃР»Рё Р·РІРµР·РґС‹ СЃРѕС€Р»РёСЃСЊ - РІРєР»СЋС‡Р°РµРј Р±РµРі РїРѕ СЃС‚РµРЅРµ
         if (isGrounded && isNearWall && (moveInput != 0f) && Input.GetButtonDown("Jump"))
         {
-            Debug.Log("Персонаж взбегает по стене");
+            Debug.Log("РџРµСЂСЃРѕРЅР°Р¶ РІР·Р±РµРіР°РµС‚ РїРѕ СЃС‚РµРЅРµ");
             isWallRunning = true;
             Jump();
         }
 
-        // Если рядом есть объект "hangable" и нажата клавиша цепляния ("F") - цепляемся.
+        // Р•СЃР»Рё СЂСЏРґРѕРј РµСЃС‚СЊ РѕР±СЉРµРєС‚ "hangable" Рё РЅР°Р¶Р°С‚Р° РєР»Р°РІРёС€Р° С†РµРїР»СЏРЅРёСЏ ("F") - С†РµРїР»СЏРµРјСЃСЏ.
         if (hangableDetector.IsHangableNearby() && Input.GetKeyDown(KeyCode.F))
         {
             GameObject hangableObject = hangableDetector.GetHangableObject();
-            // Выполните цепляние за объект "hangable"
+            // Р’С‹РїРѕР»РЅРёС‚Рµ С†РµРїР»СЏРЅРёРµ Р·Р° РѕР±СЉРµРєС‚ "hangable"
             HangOn(hangableObject);
         }
 
-        // Обновляем параметры аниматора
+        // РћР±РЅРѕРІР»СЏРµРј РїР°СЂР°РјРµС‚СЂС‹ Р°РЅРёРјР°С‚РѕСЂР°
         animator.SetFloat("MoveSpeed", Mathf.Abs(moveInput));
     }
 
@@ -77,54 +77,54 @@ public class PlayerControllerEinharr : MonoBehaviour
 
         if (moveInput != 0f)
         {
-            // Если есть ввод движения, устанавливаем параметр "isRunning" в true. Тут надо оптимизировать, но аниматор всяко временный
+            // Р•СЃР»Рё РµСЃС‚СЊ РІРІРѕРґ РґРІРёР¶РµРЅРёСЏ, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїР°СЂР°РјРµС‚СЂ "isRunning" РІ true. РўСѓС‚ РЅР°РґРѕ РѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ, РЅРѕ Р°РЅРёРјР°С‚РѕСЂ РІСЃСЏРєРѕ РІСЂРµРјРµРЅРЅС‹Р№
             animator.SetBool("isRunning", true);
             isRunning = true;
-            // Поворачиваем персонаж в сторону движения
+            // РџРѕРІРѕСЂР°С‡РёРІР°РµРј РїРµСЂСЃРѕРЅР°Р¶ РІ СЃС‚РѕСЂРѕРЅСѓ РґРІРёР¶РµРЅРёСЏ
             transform.LookAt(transform.position + moveDirection);
         }
         else
         {
-            // Если нет ввода движения, устанавливаем параметр "isRunning" в false. Тут надо оптимизировать, но аниматор всяко временный
+            // Р•СЃР»Рё РЅРµС‚ РІРІРѕРґР° РґРІРёР¶РµРЅРёСЏ, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїР°СЂР°РјРµС‚СЂ "isRunning" РІ false. РўСѓС‚ РЅР°РґРѕ РѕРїС‚РёРјРёР·РёСЂРѕРІР°С‚СЊ, РЅРѕ Р°РЅРёРјР°С‚РѕСЂ РІСЃСЏРєРѕ РІСЂРµРјРµРЅРЅС‹Р№
             animator.SetBool("isRunning", false);
             isRunning = false;
         }
 
-        if (moveInput != 0f && !isNearWall) // Проверяем наличие ввода движения и отсутствие стены рядом
+        if (moveInput != 0f && !isNearWall) // РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ РІРІРѕРґР° РґРІРёР¶РµРЅРёСЏ Рё РѕС‚СЃСѓС‚СЃС‚РІРёРµ СЃС‚РµРЅС‹ СЂСЏРґРѕРј
         {
-            // Если есть ввод движения и персонаж не рядом со стеной, устанавливаем параметр "isRunning" в true
+            // Р•СЃР»Рё РµСЃС‚СЊ РІРІРѕРґ РґРІРёР¶РµРЅРёСЏ Рё РїРµСЂСЃРѕРЅР°Р¶ РЅРµ СЂСЏРґРѕРј СЃРѕ СЃС‚РµРЅРѕР№, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїР°СЂР°РјРµС‚СЂ "isRunning" РІ true
             animator.SetBool("isRunning", true);
             isRunning = true;
-            // Поворачиваем персонаж в сторону движения
+            // РџРѕРІРѕСЂР°С‡РёРІР°РµРј РїРµСЂСЃРѕРЅР°Р¶ РІ СЃС‚РѕСЂРѕРЅСѓ РґРІРёР¶РµРЅРёСЏ
             transform.LookAt(transform.position + moveDirection);
 
-            // Применяем силу к Rigidbody персонажа с использованием инерции
+            // РџСЂРёРјРµРЅСЏРµРј СЃРёР»Сѓ Рє Rigidbody РїРµСЂСЃРѕРЅР°Р¶Р° СЃ РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµРј РёРЅРµСЂС†РёРё
             currentSpeed = Mathf.MoveTowards(currentSpeed, moveSpeed, acceleration * Time.deltaTime);
         }
         else
         {
-            // Если нет ввода движения или персонажа рядом со стеной, устанавливаем параметр "isRunning" в false, чтобы в стену не бежал
+            // Р•СЃР»Рё РЅРµС‚ РІРІРѕРґР° РґРІРёР¶РµРЅРёСЏ РёР»Рё РїРµСЂСЃРѕРЅР°Р¶Р° СЂСЏРґРѕРј СЃРѕ СЃС‚РµРЅРѕР№, СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїР°СЂР°РјРµС‚СЂ "isRunning" РІ false, С‡С‚РѕР±С‹ РІ СЃС‚РµРЅСѓ РЅРµ Р±РµР¶Р°Р»
             animator.SetBool("isRunning", false);
             isRunning = false;
-            // Останавливаем персонажа
+            // РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј РїРµСЂСЃРѕРЅР°Р¶Р°
             currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, acceleration * Time.deltaTime);
         }
 
-        // Применяем скорость только к горизонтальному движению
+        // РџСЂРёРјРµРЅСЏРµРј СЃРєРѕСЂРѕСЃС‚СЊ С‚РѕР»СЊРєРѕ Рє РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅРѕРјСѓ РґРІРёР¶РµРЅРёСЋ
         rb.velocity = new Vector3(moveDirection.x * currentSpeed, rb.velocity.y, rb.velocity.z);
     }
 
     private void CheckSurroundings()
     {
-        // Проверим наличие земли под ногами с помощью рэйкаста
+        // РџСЂРѕРІРµСЂРёРј РЅР°Р»РёС‡РёРµ Р·РµРјР»Рё РїРѕРґ РЅРѕРіР°РјРё СЃ РїРѕРјРѕС‰СЊСЋ СЂСЌР№РєР°СЃС‚Р°
         bool hitGround = Physics.Raycast(transform.position, Vector3.down, out RaycastHit groundHit, groundRaycastDistance);
         isGrounded = hitGround;
 
-        // Проверяем наличие стены перед персонажем с помощью рэйкаста
+        // РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ СЃС‚РµРЅС‹ РїРµСЂРµРґ РїРµСЂСЃРѕРЅР°Р¶РµРј СЃ РїРѕРјРѕС‰СЊСЋ СЂСЌР№РєР°СЃС‚Р°
         bool hitWall = Physics.Raycast(transform.position, transform.forward, out RaycastHit wallHit, wallRaycastDistance);
         isNearWall = hitWall;
 
-        // Визуализируем рэйкасты дебагу ради и веселья для
+        // Р’РёР·СѓР°Р»РёР·РёСЂСѓРµРј СЂСЌР№РєР°СЃС‚С‹ РґРµР±Р°РіСѓ СЂР°РґРё Рё РІРµСЃРµР»СЊСЏ РґР»СЏ
         Debug.DrawRay(transform.position, Vector3.down * groundRaycastDistance, isGrounded ? Color.green : Color.red);
         Debug.DrawRay(transform.position, transform.forward * wallRaycastDistance, isNearWall ? Color.yellow : Color.red);
     }
@@ -132,25 +132,25 @@ public class PlayerControllerEinharr : MonoBehaviour
 
     private void Jump()
     {
-        // Применяем силу прыжка к Rigidbody персонажа
+        // РџСЂРёРјРµРЅСЏРµРј СЃРёР»Сѓ РїСЂС‹Р¶РєР° Рє Rigidbody РїРµСЂСЃРѕРЅР°Р¶Р°
         if (isWallRunning)
         {
-            // Устанавливаем только вертикальную составляющую силы прыжка, тут зарылась какая-то жопа
+            // РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С‚РѕР»СЊРєРѕ РІРµСЂС‚РёРєР°Р»СЊРЅСѓСЋ СЃРѕСЃС‚Р°РІР»СЏСЋС‰СѓСЋ СЃРёР»С‹ РїСЂС‹Р¶РєР°, С‚СѓС‚ Р·Р°СЂС‹Р»Р°СЃСЊ РєР°РєР°СЏ-С‚Рѕ Р¶РѕРїР°
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
 
-            // Отключаем горизонтальную скорость, чтобы персонаж не отрывался от стены
+            // РћС‚РєР»СЋС‡Р°РµРј РіРѕСЂРёР·РѕРЅС‚Р°Р»СЊРЅСѓСЋ СЃРєРѕСЂРѕСЃС‚СЊ, С‡С‚РѕР±С‹ РїРµСЂСЃРѕРЅР°Р¶ РЅРµ РѕС‚СЂС‹РІР°Р»СЃСЏ РѕС‚ СЃС‚РµРЅС‹
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-            isWallRunning = false;
+
         }
         else
         {
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         }
-        
+        isWallRunning = false;
     }
     private void HangOn(GameObject hangableObject)
     {
-        // Логика цепляния и висения будет тут
-        Debug.Log("Условно зацепился за ", hangableObject);
+        // Р›РѕРіРёРєР° С†РµРїР»СЏРЅРёСЏ Рё РІРёСЃРµРЅРёСЏ Р±СѓРґРµС‚ С‚СѓС‚
+        Debug.Log("РЈСЃР»РѕРІРЅРѕ Р·Р°С†РµРїРёР»СЃСЏ Р·Р° ", hangableObject);
     }
 }
