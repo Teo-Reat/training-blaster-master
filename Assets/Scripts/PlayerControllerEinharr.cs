@@ -14,13 +14,13 @@ public class PlayerControllerEinharr : MonoBehaviour
 
     private Rigidbody rb;
     private Animator animator;
-    private bool isJumping = false;
+    public bool isJumping;
 
     public bool isRunning;
     public bool isWallRunning;
     public bool isGrounded;
     public bool isNearWall;
-
+    public bool isHanging;
 
     private float currentSpeed = 0f;
 
@@ -40,11 +40,28 @@ public class PlayerControllerEinharr : MonoBehaviour
         CheckSurroundings();
 
         //Управление
-
+        // Если персонаж на земле, обновляем состояние переменной isJumping
+        if (isGrounded)
+        {
+            OnGrounded();
+        }
         // Вычисляем вектор движения только по оси X, потому что иначе он будет влиять на скорость падения персонажа(данные получены горьким опытом)
         Vector3 moveDirection = new Vector3(moveInput, 0f, 0f);
 
-        MoveCharacter(moveDirection, moveInput);
+        // Проверяем,что персонаж не находится в воздухе
+        if (isGrounded && !isWallRunning && !isHanging)
+        {
+            MoveCharacter(moveDirection, moveInput);
+            animator.SetFloat("MoveSpeed", Mathf.Abs(moveInput));
+        }
+
+        // Если персонаж висит и нажата клавиша прыжка, выполняем прыжок
+        if (isHanging && Input.GetButtonDown("Jump"))
+        {
+
+        }
+
+
 
         // Если персонаж на земле и нажата клавиша прыжка, выполняем прыжок
         if (isGrounded && Input.GetButtonDown("Jump"))
@@ -69,7 +86,11 @@ public class PlayerControllerEinharr : MonoBehaviour
         }
 
         // Обновляем параметры аниматора
-        animator.SetFloat("MoveSpeed", Mathf.Abs(moveInput));
+
+        animator.SetBool("isJumping", isJumping);
+        animator.SetBool("isRunning", isRunning);
+        animator.SetBool("isGrounded", isGrounded);
+        animator.SetBool("isHanging", isHanging);
     }
 
     private void MoveCharacter(Vector3 moveDirection, float moveInput)
@@ -78,7 +99,6 @@ public class PlayerControllerEinharr : MonoBehaviour
         if (moveInput != 0f)
         {
             // Если есть ввод движения, устанавливаем параметр "isRunning" в true. Тут надо оптимизировать, но аниматор всяко временный
-            animator.SetBool("isRunning", true);
             isRunning = true;
             // Поворачиваем персонаж в сторону движения
             transform.LookAt(transform.position + moveDirection);
@@ -86,14 +106,13 @@ public class PlayerControllerEinharr : MonoBehaviour
         else
         {
             // Если нет ввода движения, устанавливаем параметр "isRunning" в false. Тут надо оптимизировать, но аниматор всяко временный
-            animator.SetBool("isRunning", false);
+
             isRunning = false;
         }
 
         if (moveInput != 0f && !isNearWall) // Проверяем наличие ввода движения и отсутствие стены рядом
         {
             // Если есть ввод движения и персонаж не рядом со стеной, устанавливаем параметр "isRunning" в true
-            animator.SetBool("isRunning", true);
             isRunning = true;
             // Поворачиваем персонаж в сторону движения
             transform.LookAt(transform.position + moveDirection);
@@ -104,7 +123,7 @@ public class PlayerControllerEinharr : MonoBehaviour
         else
         {
             // Если нет ввода движения или персонажа рядом со стеной, устанавливаем параметр "isRunning" в false, чтобы в стену не бежал
-            animator.SetBool("isRunning", false);
+
             isRunning = false;
             // Останавливаем персонажа
             currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, acceleration * Time.deltaTime);
@@ -116,13 +135,14 @@ public class PlayerControllerEinharr : MonoBehaviour
 
     private void CheckSurroundings()
     {
-        // Проверим наличие земли под ногами с помощью рэйкаста
-        bool hitGround = Physics.Raycast(transform.position, Vector3.down, out RaycastHit groundHit, groundRaycastDistance);
-        isGrounded = hitGround;
+      // Проверяем наличие земли под ногами с помощью рэйкаста
+      bool hitGround = Physics.Raycast(transform.position, Vector3.down, out RaycastHit groundHit, groundRaycastDistance, LayerMask.GetMask("Ground"));
+      isGrounded = hitGround;
 
-        // Проверяем наличие стены перед персонажем с помощью рэйкаста
-        bool hitWall = Physics.Raycast(transform.position, transform.forward, out RaycastHit wallHit, wallRaycastDistance);
-        isNearWall = hitWall;
+      // Проверяем наличие стены перед персонажем с помощью рэйкаста
+      bool hitWall = Physics.Raycast(transform.position, transform.forward, out RaycastHit wallHit, wallRaycastDistance, LayerMask.GetMask("Ground"));
+      isNearWall = hitWall;
+
 
         // Визуализируем рэйкасты дебагу ради и веселья для
         Debug.DrawRay(transform.position, Vector3.down * groundRaycastDistance, isGrounded ? Color.green : Color.red);
@@ -144,13 +164,46 @@ public class PlayerControllerEinharr : MonoBehaviour
         }
         else
         {
+            isJumping = true;
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+
         }
         isWallRunning = false;
+
     }
+
+    private void OnGrounded()
+    {
+        if (isJumping)
+        {
+            StartCoroutine(DisableJumping());
+        }
+    }
+
+    private IEnumerator DisableJumping()
+    {
+        yield return new WaitForSeconds(0.1f); // Задержка в 0.1 секунды
+        isJumping = false;
+        // Дополнительные действия при приземлении
+    }
+
+
     private void HangOn(GameObject hangableObject)
     {
-        // Логика цепляния и висения будет тут
-        Debug.Log("Условно зацепился за ", hangableObject);
+        // Получаем компонент Hangable на объекте, к которому хотим цепляться
+        Hangable hangable = hangableObject.GetComponent<Hangable>();
+
+        if (hangable != null && !isHanging)
+        {
+            // Если объект имеет компонент Hangable, выполняем цепляние
+            hangable.Hang(this.gameObject);
+            isHanging = true;
+        } else
+        {
+            // Если объект имеет компонент Hangable, выполняем цепляние
+            hangable.Release();
+            isHanging = false;
+        }
+
     }
 }
