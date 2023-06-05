@@ -16,11 +16,16 @@ public class PlayerControllerEinharr : MonoBehaviour
     private Animator animator;
     public bool isJumping;
 
+//Базовое перемещение
     public bool isRunning;
     public bool isWallRunning;
     public bool isGrounded;
     public bool isNearWall;
+//Цепляние и взбирание
     public bool isHanging;
+    public GameObject hangingObject;
+    public Vector3 hangingPoint;
+
 
     private float currentSpeed = 0f;
 
@@ -61,8 +66,6 @@ public class PlayerControllerEinharr : MonoBehaviour
 
         }
 
-
-
         // Если персонаж на земле и нажата клавиша прыжка, выполняем прыжок
         if (isGrounded && Input.GetButtonDown("Jump"))
         {
@@ -91,6 +94,7 @@ public class PlayerControllerEinharr : MonoBehaviour
         animator.SetBool("isRunning", isRunning);
         animator.SetBool("isGrounded", isGrounded);
         animator.SetBool("isHanging", isHanging);
+      //  animator.SetBool("isWallRunning", isWallRunning);
     }
 
     private void MoveCharacter(Vector3 moveDirection, float moveInput)
@@ -123,7 +127,6 @@ public class PlayerControllerEinharr : MonoBehaviour
         else
         {
             // Если нет ввода движения или персонажа рядом со стеной, устанавливаем параметр "isRunning" в false, чтобы в стену не бежал
-
             isRunning = false;
             // Останавливаем персонажа
             currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, acceleration * Time.deltaTime);
@@ -135,18 +138,21 @@ public class PlayerControllerEinharr : MonoBehaviour
 
     private void CheckSurroundings()
     {
+      // Получаем центр коллайдера
+      Vector3 raycastOrigin = GetComponent<Collider>().bounds.center;
+
       // Проверяем наличие земли под ногами с помощью рэйкаста
-      bool hitGround = Physics.Raycast(transform.position, Vector3.down, out RaycastHit groundHit, groundRaycastDistance, LayerMask.GetMask("Ground"));
+      bool hitGround = Physics.Raycast(raycastOrigin, Vector3.down, out RaycastHit groundHit, groundRaycastDistance, LayerMask.GetMask("Ground"));
       isGrounded = hitGround;
 
       // Проверяем наличие стены перед персонажем с помощью рэйкаста
-      bool hitWall = Physics.Raycast(transform.position, transform.forward, out RaycastHit wallHit, wallRaycastDistance, LayerMask.GetMask("Ground"));
+      bool hitWall = Physics.Raycast(raycastOrigin, transform.forward, out RaycastHit wallHit, wallRaycastDistance, LayerMask.GetMask("Ground"));
       isNearWall = hitWall;
 
 
         // Визуализируем рэйкасты дебагу ради и веселья для
-        Debug.DrawRay(transform.position, Vector3.down * groundRaycastDistance, isGrounded ? Color.green : Color.red);
-        Debug.DrawRay(transform.position, transform.forward * wallRaycastDistance, isNearWall ? Color.yellow : Color.red);
+        Debug.DrawRay(raycastOrigin, Vector3.down * groundRaycastDistance, isGrounded ? Color.green : Color.red);
+        Debug.DrawRay(raycastOrigin, transform.forward * wallRaycastDistance, isNearWall ? Color.yellow : Color.red);
     }
 
 
@@ -155,12 +161,12 @@ public class PlayerControllerEinharr : MonoBehaviour
         // Применяем силу прыжка к Rigidbody персонажа
         if (isWallRunning)
         {
-            // Устанавливаем только вертикальную составляющую силы прыжка, тут зарылась какая-то жопа
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+          // Устанавливаем горизонтальную и вертикальную составляющую силы прыжка
+          Vector3 wallJumpForce = transform.up * jumpForce * 0.3f;
+          rb.AddForce(wallJumpForce, ForceMode.Impulse);
 
-            // Отключаем горизонтальную скорость, чтобы персонаж не отрывался от стены
-            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
+          // Отключаем горизонтальную скорость, чтобы персонаж не отрывался от стены
+          rb.velocity = new Vector3(0f, 0f, rb.velocity.z);
         }
         else
         {
@@ -186,24 +192,36 @@ public class PlayerControllerEinharr : MonoBehaviour
         isJumping = false;
         // Дополнительные действия при приземлении
     }
-
-
-    private void HangOn(GameObject hangableObject)
+    public void HangOn(GameObject hangableObject)
     {
-        // Получаем компонент Hangable на объекте, к которому хотим цепляться
+        // Получаем ссылку на компонент Hangable
         Hangable hangable = hangableObject.GetComponent<Hangable>();
 
-        if (hangable != null && !isHanging)
+        if (hangable != null)
         {
-            // Если объект имеет компонент Hangable, выполняем цепляние
-            hangable.Hang(this.gameObject);
-            isHanging = true;
-        } else
-        {
-            // Если объект имеет компонент Hangable, выполняем цепляние
-            hangable.Release();
-            isHanging = false;
-        }
+            // Проверяем, что персонаж может цепляться за данный объект
 
+            // Устанавливаем состояние цепляния
+            isHanging = true;
+            hangingObject = hangableObject;
+            hangingPoint = hangable.center;
+
+            // Отключаем физическое взаимодействие
+            rb.isKinematic = true;
+
+            // Вычисляем позицию персонажа под точкой крепления, учитывая размер коллайдера
+            Collider characterCollider = GetComponent<Collider>();
+            float characterHeight = characterCollider.bounds.size.y;
+            float chatacerWidth = characterCollider.bounds.size.x/2;
+            Vector3 hangPosition = hangingPoint - Vector3.up * characterHeight + Vector3.left * chatacerWidth;
+            transform.position = hangPosition;
+
+            // Выполняем дополнительные действия при цеплянии
+            // hangable.OnHang();
+        }
     }
+
+
+
+
 }
