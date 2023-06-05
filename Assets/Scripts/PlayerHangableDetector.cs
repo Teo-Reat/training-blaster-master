@@ -1,7 +1,5 @@
 using UnityEngine;
 
-
-//Определятор виселок и цеплялок, простой как мычание
 public class PlayerHangableDetector : MonoBehaviour
 {
     private bool isHangableNearby = false;
@@ -17,19 +15,19 @@ public class PlayerHangableDetector : MonoBehaviour
         return hangableObject;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.collider.CompareTag("Hangable"))
+        if (other.CompareTag("Hangable"))
         {
             isHangableNearby = true;
-            hangableObject = collision.gameObject;
-            Debug.Log("Рядом обнаружена цеплялка", hangableObject);
+            hangableObject = other.gameObject;
+            Debug.Log("РћР±РЅР°СЂСѓР¶РµРЅ РѕР±СЉРµРєС‚ РґР»СЏ РїРѕРґРІРµС€РёРІР°РЅРёСЏ: " + hangableObject.name);
         }
     }
 
-    private void OnCollisionExit(Collision collision)
+    private void OnTriggerExit(Collider other)
     {
-        if (collision.collider.CompareTag("Hangable"))
+        if (other.CompareTag("Hangable"))
         {
             isHangableNearby = false;
             hangableObject = null;

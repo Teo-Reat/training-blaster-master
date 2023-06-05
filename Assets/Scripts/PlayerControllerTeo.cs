@@ -6,16 +6,13 @@ public class PlayerControllerTeo : MonoBehaviour
 {
     public float horizontalInput;
     public float verticalInput;
-    public float motorPower = 700;
-    //public float speed = 50;
+    public float motorPower = 1100;
     private Rigidbody mechRb;
     public WheelCollider[] wheels;
-    public Rigidbody[] jets;
     public GameObject centerOfMass;
-    // Start is called before the first frame update
     void Start()
     {
-        //Physics.gravity = new Vector3(0, -9.81f * 2f, 0);
+        Physics.gravity = new Vector3(0, -9.81f * 2f, 0);
         mechRb = GetComponent<Rigidbody>();
         mechRb.centerOfMass = centerOfMass.transform.localPosition;
     }
@@ -26,28 +23,21 @@ public class PlayerControllerTeo : MonoBehaviour
         verticalInput = Input.GetAxis("Vertical");
         foreach (var wheel in wheels)
         {
-            wheel.motorTorque = horizontalInput * motorPower;
+            wheel.motorTorque = horizontalInput * ((motorPower * 8) / 6);
+            Vector3 wheelPos = new Vector3();
+            Quaternion wheelRot = new Quaternion();
+            Debug.Log(wheel.rpm);
         }
-        
-    }
-
-    //Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space))
         {
             Debug.Log("Space");
-            foreach (var jet in jets)
-            {
-                Rigidbody jetDrive = GetComponent<Rigidbody>();
-                jetDrive.AddForce(Vector3.up * 1000, ForceMode.Impulse);
-            }
-            //mechRb.AddForce(Vector3.up * 5000, ForceMode.Impulse);
+            mechRb.AddForce(Vector3.up * 750, ForceMode.Impulse);
         }
-        //horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
-        
-        //mechRb.AddRelativeForce(Vector3.forward * speed);
-        //mechRb.AddForce(Vector3.forward * speed * horizontalInput, ForceMode.Acceleration);
+        if (Input.GetKey(KeyCode.Q))
+        {
+            Debug.Log("Q");
+            mechRb.AddTorque(1000, 1000, 1000, ForceMode.Impulse);
+        }
+
     }
 }

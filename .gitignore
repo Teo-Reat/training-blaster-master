@@ -60,3 +60,5 @@ Thumbs.db.meta
 # VS Code
 *.vscode
 *.vsconfig
+Assets/PolygonPrototype.meta
+Assets/PolygonPrototype/URP_ExtractMe.unitypackage.meta
