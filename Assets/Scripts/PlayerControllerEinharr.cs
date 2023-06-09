@@ -27,7 +27,7 @@ public class PlayerControllerEinharr : MonoBehaviour
     public Vector3 hangingPoint;
 
 
-    private float currentSpeed = 0f;
+    public float currentSpeed = 0f;
 
     private void Start()
     {
