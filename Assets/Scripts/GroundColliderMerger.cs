@@ -8,7 +8,7 @@ public class GroundColliderMerger : MonoBehaviour
 
   private void Start()
   {
-      // ÐÐ°ÑÐ¾Ð´Ð¸Ð¼ Ð²ÑÐµ Ð¾Ð±ÑÐµÐºÑÑ Ð½Ð° ÑÐ»Ð¾ÐµÐ½ Ñ ÑÐºÐ°Ð·Ð°Ð½Ð½ÑÐ¼ Ð¸Ð¼ÐµÐ½ÐµÐ¼
+      // ÐÐ°Ñ//Ð¾Ð´Ð¸Ð¼ Ð²ÑÐµ Ð¾Ð±ÑÐµÐºÑÑ Ð½Ð° ÑÐ»Ð¾ÐµÐ½ Ñ ÑÐºÐ°Ð·Ð°Ð½Ð½ÑÐ¼ Ð¸Ð¼ÐµÐ½ÐµÐ¼
       GameObject[] objectsOnLayer = GameObject.FindGameObjectsWithTag(layerName);
 
       // Ð¡Ð¾Ð·Ð´Ð°ÐµÐ¼ Ð½Ð¾Ð²ÑÐ¹ Ð¿ÑÑÑÐ¾Ð¹ Ð¾Ð±ÑÐµÐºÑ Ð´Ð»Ñ Ð¾Ð±ÑÐµÐ´Ð¸Ð½ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð¼ÐµÑÐ°
