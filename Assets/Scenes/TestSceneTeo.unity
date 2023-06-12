@@ -1869,6 +1869,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192246418}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &207472028
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 207472029}
+  m_Layer: 0
+  m_Name: CenterOfWeapon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &207472029
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207472028}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1650258065}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &218942427
 GameObject:
   m_ObjectHideFlags: 0
@@ -4986,6 +5017,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WL2
       objectReference: {fileID: 0}
+    - target: {fileID: 3563341999304471963, guid: b7fbfd5916a114d8fbf51c412ec89f2a, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b7fbfd5916a114d8fbf51c412ec89f2a, type: 3}
 --- !u!4 &786818641 stripped
@@ -6456,8 +6491,9 @@ MonoBehaviour:
   motorPower: 1100
   mass: 800
   jetForce: 100
-  jumpMultiplier: 84
+  jumpMultiplier: 64
   xTorq: 100
+  bulletSpeed: 100
   wheels:
   - {fileID: 2033625671}
   - {fileID: 1356481049}
@@ -6466,6 +6502,8 @@ MonoBehaviour:
   - {fileID: 801527279}
   - {fileID: 1101221143}
   centerOfMass: {fileID: 2144324309}
+  centerOfWeapon: {fileID: 207472028}
+  bullet: {fileID: 0}
 --- !u!4 &971521559
 Transform:
   m_ObjectHideFlags: 0
@@ -8607,6 +8645,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WR2
       objectReference: {fileID: 0}
+    - target: {fileID: 6828215881759538131, guid: c95ef6a2afbd84fedb71bb6536d9a00b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c95ef6a2afbd84fedb71bb6536d9a00b, type: 3}
 --- !u!4 &1306033628 stripped
@@ -10430,6 +10472,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1937948059}
+  - {fileID: 207472029}
   m_Father: {fileID: 1973572861}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
@@ -11674,8 +11717,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1937948058}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.33, z: 0}
-  m_LocalScale: {x: 0.7, y: 3, z: 0.7}
+  m_LocalPosition: {x: 0, y: 1.475, z: 0}
+  m_LocalScale: {x: 0.7, y: 0.5186544, z: 0.7}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1650258065}
