@@ -8,6 +8,8 @@ TagManager:
   - Hangable
   - Climbable
   - Slope
+  - Enemy
+  - Bullet
   layers:
   - Default
   - TransparentFX
