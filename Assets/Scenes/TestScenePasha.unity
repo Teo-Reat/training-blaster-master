@@ -18656,9 +18656,9 @@ MonoBehaviour:
   bullet: {fileID: 5575616468247661106, guid: c5bc96d48677cd945974aa22717a65f2, type: 3}
   trail_mat: {fileID: 2100000, guid: 073671c9f77b30641a9ce13efdfa5c82, type: 2}
   trail_tex: {fileID: 2800000, guid: bc122165222cc8d429f7875129f09a55, type: 3}
-  trail_time: 0.1
-  impulse: 30
-  bullet_per_sec: 10
+  trail_time: 0.5
+  impulse: 20
+  bullet_per_sec: 8
   lifetime: 0.5
 --- !u!4 &1221668841 stripped
 Transform:
