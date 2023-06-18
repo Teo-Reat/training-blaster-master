@@ -6469,7 +6469,7 @@ GameObject:
   - component: {fileID: 971521560}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Tank
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6503,7 +6503,7 @@ MonoBehaviour:
   - {fileID: 1101221143}
   centerOfMass: {fileID: 2144324309}
   centerOfWeapon: {fileID: 207472028}
-  bullet: {fileID: 0}
+  bullet: {fileID: 3821735054534470097, guid: e482c9d5ff9994155b8bfdd5510d30c2, type: 3}
 --- !u!4 &971521559
 Transform:
   m_ObjectHideFlags: 0

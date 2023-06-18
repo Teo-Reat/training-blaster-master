@@ -10,6 +10,7 @@ TagManager:
   - Slope
   - Enemy
   - Bullet
+  - Tank
   layers:
   - Default
   - TransparentFX
