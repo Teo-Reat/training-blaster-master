@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraBehaviorTeo : MonoBehaviour
 {
     public GameObject player;
-    private Vector3 offset = new Vector3(32, 7, -2);
+    private Vector3 offset = new Vector3(0, 4, -16);
 
     // Start is called before the first frame update
     void Start()

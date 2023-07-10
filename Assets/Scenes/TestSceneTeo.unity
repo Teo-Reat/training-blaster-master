@@ -6552,7 +6552,6 @@ MonoBehaviour:
   horizontalInput: 0
   verticalInput: 0
   motorPower: 800
-  mass: 800
   jetForce: 100
   jumpMultiplier: 64
   xTorq: 100
@@ -8268,8 +8267,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizontalInput: 0
   verticalInput: 0
-  motorPower: 800
-  mass: 2400
+  motorPower: 2200
   jetForce: 100
   jumpMultiplier: 64
   xTorq: 100

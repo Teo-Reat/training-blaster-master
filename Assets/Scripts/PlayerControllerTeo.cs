@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,15 +11,16 @@ public class PlayerControllerTeo : MonoBehaviour
     public float verticalInput;
 
     // physics
-    public float motorPower = 1100;
-    public float mass = 800;
+    public float motorPower = 2200;
+    private float mass = 3200;
     public float jetForce = 100;
     public float jumpMultiplier = 64;
-    public float xTorq = 100;
+    public float torqueForce = 1000;
     public float bulletSpeed = 100;
 
     // energy management
     private float reactorPower = 5;
+    private float gunShootCost = 0.2f;
     private float generateFrequency = 0.2f;
     private float accGunMax = 100;
     private float accGunCurrent = 100;
@@ -33,6 +35,7 @@ public class PlayerControllerTeo : MonoBehaviour
     public GameObject centerOfMass;
     public GameObject centerOfWeapon;
     public GameObject bullet;
+    private GameBehaviorTeo gameBehavior;
 
     void Start()
     {
@@ -41,18 +44,22 @@ public class PlayerControllerTeo : MonoBehaviour
         mechRb.mass = mass;
         mechRb.centerOfMass = centerOfMass.transform.localPosition;
 
+        gameBehavior = GameObject.Find("GameBehavior").GetComponent<GameBehaviorTeo>();
+
         InvokeRepeating("GenerateEnergy", 0, generateFrequency);
-        InvokeRepeating("Test", 1, 1);
+        InvokeRepeating("ShowAccValue", 1, 1);
     }
 
     private void FixedUpdate()
     {
         // shooting
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) && accGunCurrent > gunShootCost)
         {
             GameObject newBullet = Instantiate(bullet, centerOfWeapon.transform.position + new Vector3(0, 0, 0), centerOfWeapon.transform.rotation) as GameObject;
             Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
             bulletRb.velocity = transform.forward * bulletSpeed;
+            accGunCurrent -= gunShootCost;
+
         }
 
         // set inputs
@@ -65,7 +72,7 @@ public class PlayerControllerTeo : MonoBehaviour
             // add motor torque on wheels
             foreach (var wheel in wheels)
             {
-                wheel.motorTorque = horizontalInput * ((motorPower * 8) / wheels.Length);
+                wheel.motorTorque = horizontalInput * ((motorPower * (wheels.Length * 1.25f)) / wheels.Length);
             }
 
             // jump
@@ -90,14 +97,14 @@ public class PlayerControllerTeo : MonoBehaviour
             }
 
             // enable jet for horisontal movement in air
-            mechRb.AddForce(Vector3.forward * (jetForce) * horizontalInput, ForceMode.Impulse);
+            mechRb.AddForce(Vector3.right * jetForce * horizontalInput, ForceMode.Impulse);
         }
 
         // test for mechanics
         if (Input.GetKey(KeyCode.Q))
         {
             Debug.Log("Q");
-            mechRb.AddTorque(xTorq, 0, 0, ForceMode.Impulse);
+            mechRb.AddTorque(0, 0, torqueForce, ForceMode.Impulse);
         }
 
         // stabilization in air
@@ -105,21 +112,17 @@ public class PlayerControllerTeo : MonoBehaviour
         {
             if (transform.rotation.x > 0.01)
             {
-                mechRb.AddTorque(-xTorq, 0, 0, ForceMode.Impulse);
+                mechRb.AddTorque(0, 0, torqueForce, ForceMode.Impulse);
             }
             if (transform.rotation.x < -0.01)
             {
-                mechRb.AddTorque(xTorq, 0, 0, ForceMode.Impulse);
+                mechRb.AddTorque(0, 0, -torqueForce, ForceMode.Impulse);
             }
             if (transform.rotation.x < 0.01 && transform.rotation.x > -0.01)
             {
                 mechRb.angularVelocity = Vector3.zero;
             }
         }
-
-    }
-    private void Update()
-    {
 
     }
 
@@ -136,6 +139,8 @@ public class PlayerControllerTeo : MonoBehaviour
         }
         return onGround;
     }
+
+    // energy generation
     private void GenerateEnergy()
     {
         float chargeUnit = reactorPower / (1 / generateFrequency);
@@ -152,8 +157,14 @@ public class PlayerControllerTeo : MonoBehaviour
             accDroidCurrent += chargeUnit;
         }
     }
-    private void Test()
+
+    // accumulators value interface
+    private void ShowAccValue()
     {
-        Debug.Log($"Gun: {accGunCurrent}, Jet: {accJetCurrent}, Droid: {accDroidCurrent}");
+        gameBehavior.ShowAccValue(
+            $"Gun: {Math.Round(accGunCurrent)}",
+            $"Jet: {Math.Round(accJetCurrent)}",
+            $"Droid: {Math.Round(accDroidCurrent)}"
+        );
     }
 }
