@@ -1251,6 +1251,7 @@ GameObject:
   - component: {fileID: 1014530146}
   - component: {fileID: 1014530148}
   - component: {fileID: 1014530147}
+  - component: {fileID: 1014530149}
   m_Layer: 7
   m_Name: MainWeapon
   m_TagString: Untagged
@@ -1324,6 +1325,26 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1014530145}
   m_Mesh: {fileID: 2547298445846153547, guid: a9019f58a3b0a7e43917490b04330411, type: 3}
+--- !u!114 &1014530149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1014530145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a20cff91664b70044b57226e6ab186d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gun_module: {fileID: 1014530145}
+  bullet: {fileID: 5575616468247661106, guid: c5bc96d48677cd945974aa22717a65f2, type: 3}
+  trail_mat: {fileID: 2100000, guid: 073671c9f77b30641a9ce13efdfa5c82, type: 2}
+  trail_tex: {fileID: 2800000, guid: bc122165222cc8d429f7875129f09a55, type: 3}
+  trail_time: 0.1
+  impulse: 200
+  bullet_per_sec: 5
+  lifetime: 1
 --- !u!1 &1033051546
 GameObject:
   m_ObjectHideFlags: 0

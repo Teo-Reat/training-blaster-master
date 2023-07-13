@@ -13,11 +13,13 @@ public class GunScript : MonoBehaviour
     public float bullet_per_sec = 5;
     public float lifetime = 1;
     private float _timer;
+    private PlayerControllerTeo playerVehicle;
 
     void Start()
     {
         bullet.GetComponent<TrailRenderer>().time = trail_time;
         trail_mat.mainTexture = trail_tex;
+        playerVehicle = GameObject.Find("PlayerVehicle").GetComponent<PlayerControllerTeo>();
     }
 
     void Fire()
@@ -28,6 +30,7 @@ public class GunScript : MonoBehaviour
         b.GetComponent<Rigidbody>().AddForce(transform.forward * impulse, ForceMode.Impulse);
         Destroy(b, lifetime);
         _timer = 0;
+        playerVehicle.DischargeGun(2);
     }
 
     void GunLookAtMouse()

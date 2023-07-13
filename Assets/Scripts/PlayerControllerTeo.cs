@@ -55,14 +55,14 @@ public class PlayerControllerTeo : MonoBehaviour
         ShowAccValue();
 
         // shooting
-        if (Input.GetKey(KeyCode.E) && accGunCurrent > gunShootCost)
-        {
-            GameObject newBullet = Instantiate(bullet, centerOfWeapon.transform.position + new Vector3(0, 0, 0), centerOfWeapon.transform.rotation) as GameObject;
-            Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
-            bulletRb.velocity = transform.forward * bulletSpeed;
-            accGunCurrent -= gunShootCost;
+        //if (Input.GetKey(KeyCode.E) && accGunCurrent > gunShootCost)
+        //{
+        //    GameObject newBullet = Instantiate(bullet, centerOfWeapon.transform.position + new Vector3(0, 0, 0), centerOfWeapon.transform.rotation) as GameObject;
+        //    Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
+        //    bulletRb.velocity = transform.forward * bulletSpeed;
+        //    accGunCurrent -= gunShootCost;
 
-        }
+        //}
 
         // set inputs
         horizontalInput = Input.GetAxis("Horizontal");
@@ -170,4 +170,16 @@ public class PlayerControllerTeo : MonoBehaviour
     }
     private void Test()
     {}
+    public void DischargeGun(float power)
+    {
+        accGunCurrent -= power;
+    }
+    public void DischargeJet(float power)
+    {
+        accGunCurrent -= power;
+    }
+    public void DischargeDroid(float power)
+    {
+        accGunCurrent -= power;
+    }
 }
