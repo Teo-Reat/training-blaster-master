@@ -8,7 +8,6 @@ public class PlayerControllerTeo : MonoBehaviour
 {
     // inputs
     public float horizontalInput;
-    public float verticalInput;
 
     // physics
     public float motorPower = 2200;
@@ -47,11 +46,14 @@ public class PlayerControllerTeo : MonoBehaviour
         gameBehavior = GameObject.Find("GameBehavior").GetComponent<GameBehaviorTeo>();
 
         InvokeRepeating("GenerateEnergy", 0, generateFrequency);
-        InvokeRepeating("ShowAccValue", 1, 1);
+        InvokeRepeating("Test", 1, 1);
     }
 
     private void FixedUpdate()
     {
+        // show acc energy
+        ShowAccValue();
+
         // shooting
         if (Input.GetKey(KeyCode.E) && accGunCurrent > gunShootCost)
         {
@@ -64,7 +66,6 @@ public class PlayerControllerTeo : MonoBehaviour
 
         // set inputs
         horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
 
         // mechanics
         if (isOnGround())
@@ -76,7 +77,7 @@ public class PlayerControllerTeo : MonoBehaviour
             }
 
             // jump
-            if (Input.GetKey(KeyCode.Space) && accJetCurrent > 20)
+            if (Input.GetKey(KeyCode.W) && accJetCurrent > 20)
             {
                 mechRb.AddForce(Vector3.up * jetForce * jumpMultiplier, ForceMode.Impulse);
             }
@@ -90,7 +91,7 @@ public class PlayerControllerTeo : MonoBehaviour
             }
 
             // enable jet for fly or slow fall
-            if (Input.GetKey(KeyCode.Space) && accJetCurrent > 0)
+            if (Input.GetKey(KeyCode.W) && accJetCurrent > 0)
             {
                 mechRb.AddForce(Vector3.up * (jetForce * 3), ForceMode.Impulse);
                 accJetCurrent -= (0.02f * 10);
@@ -167,4 +168,6 @@ public class PlayerControllerTeo : MonoBehaviour
             $"Droid: {Math.Round(accDroidCurrent)}"
         );
     }
+    private void Test()
+    {}
 }
