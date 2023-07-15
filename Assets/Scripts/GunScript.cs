@@ -13,6 +13,7 @@ public class GunScript : MonoBehaviour
     public float bullet_per_sec = 5;
     public float lifetime = 1;
     private float _timer;
+    private float gunShootCost = 3  ;
     private PlayerControllerTeo playerVehicle;
 
     void Start()
@@ -24,13 +25,17 @@ public class GunScript : MonoBehaviour
 
     void Fire()
     {
-        _timer += Time.deltaTime;
-        if (_timer < 1 / bullet_per_sec) return;
-        GameObject b = Instantiate(bullet, gun_module.transform.position, gun_module.transform.rotation);
-        b.GetComponent<Rigidbody>().AddForce(transform.forward * impulse, ForceMode.Impulse);
-        Destroy(b, lifetime);
-        _timer = 0;
-        playerVehicle.DischargeGun(2);
+        if (playerVehicle.Batteries[0].value > gunShootCost)
+        {
+            _timer += Time.deltaTime;
+            if (_timer < 1 / bullet_per_sec) return;
+            GameObject b = Instantiate(bullet, gun_module.transform.position, gun_module.transform.rotation);
+            b.GetComponent<Rigidbody>().AddForce(transform.forward * impulse, ForceMode.Impulse);
+            Destroy(b, lifetime);
+            _timer = 0;
+            playerVehicle.DischargeGun(gunShootCost);
+        }
+        
     }
 
     void GunLookAtMouse()

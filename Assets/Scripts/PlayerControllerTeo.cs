@@ -19,14 +19,17 @@ public class PlayerControllerTeo : MonoBehaviour
 
     // energy management
     private float reactorPower = 5;
-    private float gunShootCost = 0.2f;
+    private List<Module> batteries = new List<Module>(5)
+    {
+        new Module
+        { name = "gun", value = 100, max = 100 },
+        new Module
+        { name = "jet", value = 100, max = 100 },
+        new Module
+        { name = "droid", value = 100, max = 100 },
+    };
+    public List<Module> Batteries { get { return batteries; } }
     private float generateFrequency = 0.2f;
-    private float accGunMax = 100;
-    private float accGunCurrent = 100;
-    private float accJetMax = 100;
-    private float accJetCurrent = 100;
-    private float accDroidMax = 100;
-    private float accDroidCurrent = 100;
 
     // object components
     private Rigidbody mechRb;
@@ -54,16 +57,6 @@ public class PlayerControllerTeo : MonoBehaviour
         // show acc energy
         ShowAccValue();
 
-        // shooting
-        //if (Input.GetKey(KeyCode.E) && accGunCurrent > gunShootCost)
-        //{
-        //    GameObject newBullet = Instantiate(bullet, centerOfWeapon.transform.position + new Vector3(0, 0, 0), centerOfWeapon.transform.rotation) as GameObject;
-        //    Rigidbody bulletRb = newBullet.GetComponent<Rigidbody>();
-        //    bulletRb.velocity = transform.forward * bulletSpeed;
-        //    accGunCurrent -= gunShootCost;
-
-        //}
-
         // set inputs
         horizontalInput = Input.GetAxis("Horizontal");
 
@@ -77,7 +70,7 @@ public class PlayerControllerTeo : MonoBehaviour
             }
 
             // jump
-            if (Input.GetKey(KeyCode.W) && accJetCurrent > 20)
+            if (Input.GetKey(KeyCode.W) && batteries[1].value > 20)
             {
                 mechRb.AddForce(Vector3.up * jetForce * jumpMultiplier, ForceMode.Impulse);
             }
@@ -91,10 +84,10 @@ public class PlayerControllerTeo : MonoBehaviour
             }
 
             // enable jet for fly or slow fall
-            if (Input.GetKey(KeyCode.W) && accJetCurrent > 0)
+            if (Input.GetKey(KeyCode.W) && batteries[1].value > 0)
             {
                 mechRb.AddForce(Vector3.up * (jetForce * 3), ForceMode.Impulse);
-                accJetCurrent -= (0.02f * 10);
+                batteries[1].value -= (0.02f * 10);
             }
 
             // enable jet for horisontal movement in air
@@ -145,17 +138,12 @@ public class PlayerControllerTeo : MonoBehaviour
     private void GenerateEnergy()
     {
         float chargeUnit = reactorPower / (1 / generateFrequency);
-        if (accGunCurrent < accGunMax)
+        for (int i = 0; i < batteries.Count; i++)
         {
-            accGunCurrent += chargeUnit;
-        }
-        else if (accJetCurrent < accJetMax)
-        {
-            accJetCurrent += chargeUnit;
-        }
-        else if (accDroidCurrent < accDroidMax)
-        {
-            accDroidCurrent += chargeUnit;
+            if (batteries[i].value < 100)
+            {
+                batteries[i].value += chargeUnit / countNotFullBatteries();
+            }
         }
     }
 
@@ -163,23 +151,44 @@ public class PlayerControllerTeo : MonoBehaviour
     private void ShowAccValue()
     {
         gameBehavior.ShowAccValue(
-            $"Gun: {Math.Round(accGunCurrent)}",
-            $"Jet: {Math.Round(accJetCurrent)}",
-            $"Droid: {Math.Round(accDroidCurrent)}"
+            $"{batteries[0].name}: {Math.Floor(batteries[0].value)}",
+            $"{batteries[1].name}: {Math.Floor(batteries[1].value)}",
+            $"{batteries[2].name}: {Math.Floor(batteries[2].value)}"
         );
     }
     private void Test()
     {}
     public void DischargeGun(float power)
     {
-        accGunCurrent -= power;
+        //accGunCurrent -= power;
+        batteries[0].value -= power;
     }
     public void DischargeJet(float power)
     {
-        accGunCurrent -= power;
+        //accGunCurrent -= power;
+        batteries[1].value -= power;
     }
     public void DischargeDroid(float power)
     {
-        accGunCurrent -= power;
+        //accGunCurrent -= power;
+        batteries[2].value -= power;
+    }
+    private int countNotFullBatteries()
+    {
+        int num = 0;
+        for (int i = 0; i < batteries.Count; i++)
+        {
+            if (batteries[i].value < 100)
+            {
+                num++;
+            }
+        }
+        return num;
+    }
+    public class Module
+    {
+        public string name;
+        public float value;
+        public float max;
     }
 }
