@@ -39,6 +39,11 @@ public class PlayerControllerTeo : MonoBehaviour
     public GameObject bullet;
     private GameBehaviorTeo gameBehavior;
 
+    // jet particles
+    public List<ParticleSystem> jumpJets = new List<ParticleSystem>(4);
+    public List<ParticleSystem> jetsPush = new List<ParticleSystem>(2);
+    public List<ParticleSystem> jetsPull = new List<ParticleSystem>(2);
+
     void Start()
     {
         Physics.gravity = new Vector3(0, -9.81f * 2f, 0);
@@ -73,7 +78,13 @@ public class PlayerControllerTeo : MonoBehaviour
             if (Input.GetKey(KeyCode.W) && batteries[1].value > 20)
             {
                 mechRb.AddForce(Vector3.up * jetForce * jumpMultiplier, ForceMode.Impulse);
+                JumpJetsControl(true);
             }
+            else
+            {
+                JumpJetsControl(false);
+            }
+            MoveJetsControl(false, horizontalInput);
         }
         else
         {
@@ -88,17 +99,23 @@ public class PlayerControllerTeo : MonoBehaviour
             {
                 mechRb.AddForce(Vector3.up * (jetForce * 3), ForceMode.Impulse);
                 batteries[1].value -= (0.02f * 10);
+                JumpJetsControl(true);
+            }
+            else
+            {
+                JumpJetsControl(false);
             }
 
             // enable jet for horisontal movement in air
             mechRb.AddForce(Vector3.right * jetForce * horizontalInput, ForceMode.Impulse);
+            MoveJetsControl(horizontalInput != 0, horizontalInput);
         }
 
         // test for mechanics
         if (Input.GetKey(KeyCode.Q))
         {
-            Debug.Log("Q");
-            mechRb.AddTorque(0, 0, torqueForce, ForceMode.Impulse);
+            //Debug.Log("Q");
+            //mechRb.AddTorque(0, 0, torqueForce, ForceMode.Impulse);
         }
 
         // stabilization in air
@@ -140,7 +157,7 @@ public class PlayerControllerTeo : MonoBehaviour
         float chargeUnit = reactorPower / (1 / generateFrequency);
         for (int i = 0; i < batteries.Count; i++)
         {
-            if (batteries[i].value < 100)
+            if (batteries[i].value < batteries[i].max)
             {
                 batteries[i].value += chargeUnit / countNotFullBatteries();
             }
@@ -184,6 +201,46 @@ public class PlayerControllerTeo : MonoBehaviour
             }
         }
         return num;
+    }
+    private void JumpJetsControl(bool enable)
+    {
+        foreach (ParticleSystem jet in jumpJets)
+        {
+            if (enable)
+            {
+                jet.Play();
+            }
+            else
+            {
+                jet.Stop();
+            }
+        }
+    }
+    private void MoveJetsControl(bool enable, float input)
+    {
+        foreach (ParticleSystem jet in jetsPush)
+        {
+            if (enable && input > 0)
+            {
+                jet.Play();
+            }
+            else
+            {
+                jet.Stop();
+            }
+        }
+        foreach (ParticleSystem jet in jetsPull)
+        {
+            if (enable && input < 0)
+            {
+                jet.Play();
+            }
+            else
+            {
+                jet.Stop();
+            }
+        }
+        
     }
     public class Module
     {
