@@ -14,18 +14,18 @@ public class GunScript : MonoBehaviour
     public float lifetime = 1;
     private float _timer;
     private float gunShootCost = 3  ;
-    private PlayerControllerTeo playerVehicle;
+    private EnergyGeneration energy;
 
     void Start()
     {
         bullet.GetComponent<TrailRenderer>().time = trail_time;
         trail_mat.mainTexture = trail_tex;
-        playerVehicle = GameObject.Find("PlayerVehicle").GetComponent<PlayerControllerTeo>();
+        energy = GameObject.Find("PlayerVehicle").GetComponent<EnergyGeneration>();
     }
 
     void Fire()
     {
-        if (playerVehicle.Batteries[0].value > gunShootCost)
+        if (energy.Batteries[0].value > gunShootCost)
         {
             _timer += Time.deltaTime;
             if (_timer < 1 / bullet_per_sec) return;
@@ -33,7 +33,7 @@ public class GunScript : MonoBehaviour
             b.GetComponent<Rigidbody>().AddForce(transform.forward * impulse, ForceMode.Impulse);
             Destroy(b, lifetime);
             _timer = 0;
-            playerVehicle.DischargeGun(gunShootCost);
+            energy.DischargeGun(gunShootCost);
         }
         
     }

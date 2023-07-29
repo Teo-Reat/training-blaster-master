@@ -10093,7 +10093,7 @@ Transform:
   m_Children:
   - {fileID: 1603746001}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!114 &129761635
 MonoBehaviour:
@@ -10427,7 +10427,7 @@ GameObject:
   - component: {fileID: 540239427}
   - component: {fileID: 540239430}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10512,7 +10512,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3939f82dedc54efda8ee5c14ead3724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 1120839876}
+  players:
+  - {fileID: 1120839876}
+  - {fileID: 129761631}
+  activePlayer: {fileID: 0}
 --- !u!1 &596934603
 GameObject:
   m_ObjectHideFlags: 0
@@ -25434,7 +25437,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &888231417
 MonoBehaviour:
@@ -25731,7 +25734,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1058185287
 GameObject:
@@ -25936,6 +25939,7 @@ GameObject:
   - component: {fileID: 1120839879}
   - component: {fileID: 1120839878}
   - component: {fileID: 1120839877}
+  - component: {fileID: 1120839880}
   m_Layer: 7
   m_Name: PlayerVehicle
   m_TagString: Tank
@@ -26016,6 +26020,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!114 &1120839880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120839876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9718a0b192e83471e9ec845caac239df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1173843938
 GameObject:
   m_ObjectHideFlags: 0
@@ -36179,7 +36195,7 @@ Transform:
   m_Children:
   - {fileID: 810457879}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1409243797
 GameObject:
@@ -41351,7 +41367,7 @@ RectTransform:
   m_Children:
   - {fileID: 1114862657}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

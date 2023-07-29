@@ -1,4 +1,4 @@
-using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -17,20 +17,6 @@ public class PlayerControllerTeo : MonoBehaviour
     public float torqueForce = 1000;
     public float bulletSpeed = 100;
 
-    // energy management
-    private float reactorPower = 5;
-    private List<Module> batteries = new List<Module>(5)
-    {
-        new Module
-        { name = "gun", value = 100, max = 100 },
-        new Module
-        { name = "jet", value = 100, max = 100 },
-        new Module
-        { name = "droid", value = 100, max = 100 },
-    };
-    public List<Module> Batteries { get { return batteries; } }
-    private float generateFrequency = 0.2f;
-
     // object components
     private Rigidbody mechRb;
     public WheelCollider[] wheels;
@@ -38,6 +24,7 @@ public class PlayerControllerTeo : MonoBehaviour
     public GameObject centerOfWeapon;
     public GameObject bullet;
     private GameBehaviorTeo gameBehavior;
+    private EnergyGeneration energy;
 
     // jet particles
     public List<ParticleSystem> jumpJets = new List<ParticleSystem>(4);
@@ -51,17 +38,13 @@ public class PlayerControllerTeo : MonoBehaviour
         mechRb.mass = mass;
         mechRb.centerOfMass = centerOfMass.transform.localPosition;
 
-        gameBehavior = GameObject.Find("GameBehavior").GetComponent<GameBehaviorTeo>();
+        energy = GameObject.Find("PlayerVehicle").GetComponent<EnergyGeneration>();
 
-        InvokeRepeating("GenerateEnergy", 0, generateFrequency);
         InvokeRepeating("Test", 1, 1);
     }
 
     private void FixedUpdate()
     {
-        // show acc energy
-        ShowAccValue();
-
         // set inputs
         horizontalInput = Input.GetAxis("Horizontal");
 
@@ -75,7 +58,7 @@ public class PlayerControllerTeo : MonoBehaviour
             }
 
             // jump
-            if (Input.GetKey(KeyCode.W) && batteries[1].value > 20)
+            if (Input.GetKey(KeyCode.W) && energy.Batteries[1].value > 20)
             {
                 mechRb.AddForce(Vector3.up * jetForce * jumpMultiplier, ForceMode.Impulse);
                 JumpJetsControl(true);
@@ -95,10 +78,10 @@ public class PlayerControllerTeo : MonoBehaviour
             }
 
             // enable jet for fly or slow fall
-            if (Input.GetKey(KeyCode.W) && batteries[1].value > 0)
+            if (Input.GetKey(KeyCode.W) && energy.Batteries[1].value > 0)
             {
                 mechRb.AddForce(Vector3.up * (jetForce * 3), ForceMode.Impulse);
-                batteries[1].value -= (0.02f * 10);
+                energy.DischargeJet(0.02f * 10);
                 JumpJetsControl(true);
             }
             else
@@ -151,57 +134,9 @@ public class PlayerControllerTeo : MonoBehaviour
         return onGround;
     }
 
-    // energy generation
-    private void GenerateEnergy()
-    {
-        float chargeUnit = reactorPower / (1 / generateFrequency);
-        for (int i = 0; i < batteries.Count; i++)
-        {
-            if (batteries[i].value < batteries[i].max)
-            {
-                batteries[i].value += chargeUnit / countNotFullBatteries();
-            }
-        }
-    }
-
-    // accumulators value interface
-    private void ShowAccValue()
-    {
-        gameBehavior.ShowAccValue(
-            $"{batteries[0].name}: {Math.Floor(batteries[0].value)}",
-            $"{batteries[1].name}: {Math.Floor(batteries[1].value)}",
-            $"{batteries[2].name}: {Math.Floor(batteries[2].value)}"
-        );
-    }
     private void Test()
     {}
-    public void DischargeGun(float power)
-    {
-        //accGunCurrent -= power;
-        batteries[0].value -= power;
-    }
-    public void DischargeJet(float power)
-    {
-        //accGunCurrent -= power;
-        batteries[1].value -= power;
-    }
-    public void DischargeDroid(float power)
-    {
-        //accGunCurrent -= power;
-        batteries[2].value -= power;
-    }
-    private int countNotFullBatteries()
-    {
-        int num = 0;
-        for (int i = 0; i < batteries.Count; i++)
-        {
-            if (batteries[i].value < 100)
-            {
-                num++;
-            }
-        }
-        return num;
-    }
+    
     private void JumpJetsControl(bool enable)
     {
         foreach (ParticleSystem jet in jumpJets)
@@ -242,10 +177,14 @@ public class PlayerControllerTeo : MonoBehaviour
         }
         
     }
-    public class Module
+    public void VehicleReady()
     {
-        public string name;
-        public float value;
-        public float max;
+        mechRb.drag = 0.2f;
+    }
+    public void VehicleStop()
+    {
+        mechRb.velocity = Vector3.zero;
+        mechRb.angularVelocity = Vector3.zero;
+        mechRb.drag = 20;
     }
 }
