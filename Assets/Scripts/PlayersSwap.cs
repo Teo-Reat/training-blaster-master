@@ -4,62 +4,89 @@ using UnityEngine;
 
 public class PlayersSwap : MonoBehaviour
 {
-    public Transform character;
-    public List<Transform> possibleCharaters;
-    public int whichCharacter;
-    private CameraBehaviorTeo playerCamera;
+    public GameObject character;
+    public GameObject vehicle;
+    public GameObject droid;
     private PlayerControllerTeo transportController;
+    private bool isOnGround;
+    private GameObject droidDoll;
 
-    // Start is called before the first frame update
     void Start()
     {
-        playerCamera = GameObject.Find("MainCamera").GetComponent<CameraBehaviorTeo>();
+        droidDoll = GameObject.Find("PlayerDroidDoll");
         transportController = GameObject.Find("PlayerVehicle").GetComponent<PlayerControllerTeo>();
-        if (character == null && possibleCharaters.Count > 0)
-        {
-            character = possibleCharaters[0];
-        }
-        Swap();
+        SelectTransport();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Test();
+        }
+        isOnGround = transportController.IsOnGround();
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (whichCharacter == 0)
-            {
-                whichCharacter = 1; 
-            }
-            else
-            {
-                whichCharacter = 0;
-            }
             Swap();
         }
     }
     // script not so good
     void Swap()
     {
-        character = possibleCharaters[whichCharacter];
-        if (whichCharacter == 0)
+        if (character == vehicle)
         {
-            
-            playerCamera.SwapCamera(whichCharacter);
-            possibleCharaters[0].GetComponent<PlayerControllerTeo>().enabled = true;
-            possibleCharaters[1].GetComponent<PlayerControllerArt>().enabled = false;
-            Invoke("ReadyAfterScriptInit", 0.1f);
+            SelectDroid();
         }
         else
         {
-            transportController.VehicleStop();
-            playerCamera.SwapCamera(whichCharacter);
-            possibleCharaters[0].GetComponent<PlayerControllerTeo>().enabled = false;
-            possibleCharaters[1].GetComponent<PlayerControllerArt>().enabled = true;
+            SelectTransport();
         }
     }
     void ReadyAfterScriptInit()
     {
         transportController.VehicleReady();
+    }
+    void SelectTransport()
+    {
+        vehicle.GetComponent<PlayerControllerTeo>().enabled = true;
+        droid.GetComponent<PlayerControllerArt>().enabled = false;
+        droid.SetActive(false);
+        droidDoll.SetActive(true);
+        Animation dr = droidDoll.GetComponent<Animation>();
+        dr.Play("DroidDollGoIn");
+        character = vehicle;
+        Invoke("ReadyAfterScriptInit", 0.1f);
+    }
+    void SelectDroid()
+    {
+        if (isOnGround)
+        {
+            transportController.VehicleStop();
+            DollExit();
+            vehicle.GetComponent<PlayerControllerTeo>().enabled = false;
+            droid.GetComponent<PlayerControllerArt>().enabled = true;
+        }
+    }
+    void DollExit()
+    {
+        Debug.Log("DollExit");
+        Animation dr = droidDoll.GetComponent<Animation>();
+        dr.Play("DroidDollGoOut");
+        Invoke("ChangeDroid", 1);
+
+    }
+    void Test()
+    {
+        Animation dr = droidDoll.GetComponent<Animation>();
+        dr.Play("DroidDollGoIn");
+    }
+    void ChangeDroid()
+    {
+        droid.transform.position = droidDoll.transform.position;
+        droid.transform.rotation = droidDoll.transform.rotation;
+        droid.SetActive(true);
+        character = droid;
+        droidDoll.SetActive(false);
     }
 }

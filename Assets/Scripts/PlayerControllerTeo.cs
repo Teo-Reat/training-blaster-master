@@ -22,8 +22,6 @@ public class PlayerControllerTeo : MonoBehaviour
     public WheelCollider[] wheels;
     public GameObject centerOfMass;
     public GameObject centerOfWeapon;
-    public GameObject bullet;
-    private GameBehaviorTeo gameBehavior;
     private EnergyGeneration energy;
 
     // jet particles
@@ -49,7 +47,7 @@ public class PlayerControllerTeo : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
 
         // mechanics
-        if (isOnGround())
+        if (IsOnGround())
         {
             // add motor torque on wheels
             foreach (var wheel in wheels)
@@ -102,7 +100,7 @@ public class PlayerControllerTeo : MonoBehaviour
         }
 
         // stabilization in air
-        if (!isOnGround())
+        if (!IsOnGround())
         {
             if (transform.rotation.x > 0.01)
             {
@@ -121,7 +119,7 @@ public class PlayerControllerTeo : MonoBehaviour
     }
 
     // check for one of wheel in ground
-    private bool isOnGround()
+    public bool IsOnGround()
     {
         bool onGround = false;
         foreach (var wheel in wheels)
@@ -185,6 +183,10 @@ public class PlayerControllerTeo : MonoBehaviour
     {
         mechRb.velocity = Vector3.zero;
         mechRb.angularVelocity = Vector3.zero;
+        foreach (var wheel in wheels)
+        {
+            wheel.motorTorque = 0;
+        }
         mechRb.drag = 20;
     }
 }
