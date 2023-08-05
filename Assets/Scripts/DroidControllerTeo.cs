@@ -55,7 +55,7 @@ public class DroidControllerTeo : MonoBehaviour
     }
     void FallFaster()
     {
-        Debug.Log("FAAAAAAALL!");
+        //Debug.Log("FAAAAAAALL!");
         droidRb.AddForce(1, -4300, 1);
     }
 }
