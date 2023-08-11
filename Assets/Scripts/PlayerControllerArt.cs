@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Numerics;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -17,8 +18,9 @@ public class PlayerControllerArt : MonoBehaviour
     [SerializeField] private Transform raycastPoint;
     [SerializeField] private float stepSmooth = .1f;
 
-    [Header("Jumping")] [SerializeField] private float jumpimgForce;
-    [SerializeField] private float gravityForce;
+    [Header("Jumping")] 
+    [SerializeField] private float jumpimgForce;
+    [SerializeField] private float additionalGravityForce;
     [SerializeField] private bool sealInput;
 
     [Header("Debug unview later")]
@@ -26,6 +28,7 @@ public class PlayerControllerArt : MonoBehaviour
     [SerializeField] private bool onGround;
     [SerializeField] private bool onSlope;
 
+    [SerializeField] private bool isJumping = true;
     private Vector3 inputDirection;
     private Rigidbody playerRb;
     private CapsuleCollider playerCollider;
@@ -43,9 +46,16 @@ public class PlayerControllerArt : MonoBehaviour
         input = Input.GetAxisRaw("Horizontal");
         inputDirection = new Vector3(input, 0, 0);
 
-        if (!Input.GetKeyDown(KeyCode.Space) || !onGround) return;
+        if (!Input.GetKeyDown(KeyCode.Space) || isJumping) return;
+        
         playerRb.velocity = new Vector3(playerRb.velocity.x, 0, 0);
         playerRb.AddForce(Vector3.up * jumpimgForce, ForceMode.Impulse);
+    }
+
+    IEnumerator CoyoteTime()
+    {
+        yield return new WaitForSeconds(.1f);
+        isJumping = true;
     }
 
     void FixedUpdate()
@@ -59,12 +69,12 @@ public class PlayerControllerArt : MonoBehaviour
     private void AddGravity()
     {
         if (!onGround && playerRb.velocity.y <= 0)
-            playerRb.velocity += gravityForce * Time.deltaTime * Physics.gravity;
+            playerRb.velocity += additionalGravityForce * Time.deltaTime * Physics.gravity;
     }
 
     private void MoveCharacter()
     {
-        if (sealInput && !onGround) return;
+        if (sealInput && isJumping) return;
         var targetSpeed = input * movementSpeed;
         var deltaSpeed = targetSpeed - playerRb.velocity.x;
         var directionAlongGround = Vector3.ProjectOnPlane(Vector3.right, groundNormal);
@@ -75,9 +85,12 @@ public class PlayerControllerArt : MonoBehaviour
 
     private void CheckGround()
     {
-        var isHitting = Physics.Raycast(transform.position, Vector3.down, out var collision, .1f);
+        onGround = Physics.Raycast(transform.position, Vector3.down, out var collision, .1f);
         groundNormal = collision.normal;
-        onGround = isHitting;
+        if (!onGround)
+            StartCoroutine(CoyoteTime());
+        if (onGround)
+            isJumping = false;
         onSlope = onGround && groundNormal.y != 1;
         playerRb.useGravity = !onSlope;
     }
@@ -86,16 +99,20 @@ public class PlayerControllerArt : MonoBehaviour
     {
         var isHittingLower = Physics.Raycast(transform.position, transform.forward, out var collisionLower,
             playerCollider.radius);
+        //no obstacle on lower raycast
         if (!isHittingLower) return;
+
         var isHittingUpper = Physics.Raycast(raycastPoint.position, transform.forward, out var collisionUpper,
             playerCollider.radius);
+        //no obstacle on upper raysact
         if (!isHittingUpper)
         {
-            if (!onSlope && input != 0)
+            //not on slope and lower obstacle = 90 degrees => lift character a bit. Im assume where is no ladders on slopes
+            if (!onSlope && input != 0 && collisionLower.normal.y == 0)
                 playerRb.position += new Vector3(0, stepSmooth, 0);
             return;
         }
-
+        // upper obstacle is not walkable slope or wall
         if (Mathf.Abs(collisionUpper.normal.y) < MinGroundNormalY)
             input = 0;
     }
