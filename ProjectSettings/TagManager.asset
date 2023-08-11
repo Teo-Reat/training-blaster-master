@@ -8,6 +8,9 @@ TagManager:
   - Hangable
   - Climbable
   - Slope
+  - Enemy
+  - Bullet
+  - Tank
   layers:
   - Default
   - TransparentFX
@@ -16,12 +19,12 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - Parralax1
+  - Parralax2
+  - Parralax3
+  - Parralax4
+  - Parralax5
   - 
   - 
   - 
