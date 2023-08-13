@@ -31,7 +31,7 @@ public class PlayerControllerTeo : MonoBehaviour
 
     void Start()
     {
-        Physics.gravity = new Vector3(0, -9.81f * 2f, 0);
+        Physics.gravity = new Vector3(0, -9.81f, 0);
         mechRb = GetComponent<Rigidbody>();
         mechRb.mass = mass;
         mechRb.centerOfMass = centerOfMass.transform.localPosition;

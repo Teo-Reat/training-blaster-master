@@ -50,8 +50,8 @@ public class PlayersSwap : MonoBehaviour
     void SelectTransport()
     {
         vehicle.GetComponent<PlayerControllerTeo>().enabled = true;
-        droid.GetComponent<DroidControllerTeo>().enabled = false;
-        //droid.GetComponent<PlayerControllerArt>().enabled = false;
+        //droid.GetComponent<DroidControllerTeo>().enabled = false;
+        droid.GetComponent<PlayerControllerArt>().enabled = false;
         droid.SetActive(false);
         droidDoll.SetActive(true);
         Animation dr = droidDoll.GetComponent<Animation>();
@@ -66,8 +66,8 @@ public class PlayersSwap : MonoBehaviour
             transportController.VehicleStop();
             DollExit();
             vehicle.GetComponent<PlayerControllerTeo>().enabled = false;
-            droid.GetComponent<DroidControllerTeo>().enabled = true;
-            //droid.GetComponent<PlayerControllerArt>().enabled = true;
+            //droid.GetComponent<DroidControllerTeo>().enabled = true;
+            droid.GetComponent<PlayerControllerArt>().enabled = true;
         }
     }
     void DollExit()
