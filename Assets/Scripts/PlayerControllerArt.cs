@@ -33,20 +33,24 @@ public class PlayerControllerArt : MonoBehaviour
     private Rigidbody playerRb;
     private CapsuleCollider playerCollider;
     private Vector3 groundNormal;
+    Animator animator;
 
 
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         playerCollider = GetComponent<CapsuleCollider>();
     }
 
     void Update()
     {
+        CheckGround();
+
         input = Input.GetAxisRaw("Horizontal");
         inputDirection = new Vector3(input, 0, 0);
 
-        if (!Input.GetKeyDown(KeyCode.Space) || isJumping) return;
+        if (!Input.GetKeyDown(KeyCode.W) || isJumping) return;
         
         playerRb.velocity = new Vector3(playerRb.velocity.x, 0, 0);
         playerRb.AddForce(Vector3.up * jumpimgForce, ForceMode.Impulse);
@@ -60,7 +64,7 @@ public class PlayerControllerArt : MonoBehaviour
 
     void FixedUpdate()
     {
-        CheckGround();
+        //CheckGround();
         CheckForwardDirection();
         AddGravity();
         MoveCharacter();
@@ -75,6 +79,14 @@ public class PlayerControllerArt : MonoBehaviour
     private void MoveCharacter()
     {
         if (sealInput && isJumping) return;
+        if (input == 0 || !onGround)
+        {
+            animator.SetBool("isWalk", false);
+        }
+        if (input != 0 && onGround)
+        {
+            animator.SetBool("isWalk", true);
+        }
         var targetSpeed = input * movementSpeed;
         var deltaSpeed = targetSpeed - playerRb.velocity.x;
         var directionAlongGround = Vector3.ProjectOnPlane(Vector3.right, groundNormal);
@@ -88,9 +100,17 @@ public class PlayerControllerArt : MonoBehaviour
         onGround = Physics.Raycast(transform.position, Vector3.down, out var collision, .1f);
         groundNormal = collision.normal;
         if (!onGround)
+        {
             StartCoroutine(CoyoteTime());
+            animator.SetBool("isJump", true);
+        }
+
         if (onGround)
+        {
             isJumping = false;
+            animator.SetBool("isJump", false);
+        }  
+            
         onSlope = onGround && groundNormal.y != 1;
         playerRb.useGravity = !onSlope;
     }
