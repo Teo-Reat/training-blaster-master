@@ -1,8 +1,5 @@
-using System;
 using System.Collections;
-using System.Numerics;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Vector3 = UnityEngine.Vector3;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
