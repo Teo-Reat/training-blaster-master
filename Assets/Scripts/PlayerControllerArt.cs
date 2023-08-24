@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
+using System.Numerics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Vector3 = UnityEngine.Vector3;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider))]
@@ -42,15 +45,13 @@ public class PlayerControllerArt : MonoBehaviour
 
     void Update()
     {
-        CheckGround();
-
         input = Input.GetAxisRaw("Horizontal");
         inputDirection = new Vector3(input, 0, 0);
 
-        if (!Input.GetKeyDown(KeyCode.W) || isJumping) return;
-        
-        playerRb.velocity = new Vector3(playerRb.velocity.x, 0, 0);
-        playerRb.AddForce(Vector3.up * jumpimgForce, ForceMode.Impulse);
+        if (Input.GetKeyDown(KeyCode.W) && !isJumping)
+        {
+            JumpUp();
+        }
     }
 
     IEnumerator CoyoteTime()
@@ -61,7 +62,7 @@ public class PlayerControllerArt : MonoBehaviour
 
     void FixedUpdate()
     {
-        //CheckGround();
+        CheckGround();
         CheckForwardDirection();
         AddGravity();
         MoveCharacter();
@@ -91,6 +92,11 @@ public class PlayerControllerArt : MonoBehaviour
         playerRb.AddForce(directionAlongGround * (accelRate * deltaSpeed), ForceMode.Force);
         transform.LookAt(transform.position + inputDirection);
     }
+    void JumpUp()
+    {
+        animator.SetBool("isJump", true);
+        Invoke("SetFallAnimationOn", 0.1f);
+    }
 
     private void CheckGround()
     {
@@ -99,13 +105,15 @@ public class PlayerControllerArt : MonoBehaviour
         if (!onGround)
         {
             StartCoroutine(CoyoteTime());
-            animator.SetBool("isJump", true);
+            animator.SetBool("isFall", true);
         }
 
         if (onGround)
         {
             isJumping = false;
-            animator.SetBool("isJump", false);
+            animator.SetBool("isFall", isJumping);
+            animator.SetBool("isLand", true);
+            Invoke("SetLandAnimationOff", 0.1f);
         }  
             
         onSlope = onGround && groundNormal.y != 1;
@@ -132,5 +140,16 @@ public class PlayerControllerArt : MonoBehaviour
         // upper obstacle is not walkable slope or wall
         if (Mathf.Abs(collisionUpper.normal.y) < MinGroundNormalY)
             input = 0;
+    }
+    void SetFallAnimationOn()
+    {
+        playerRb.velocity = new Vector3(playerRb.velocity.x, 0, 0);
+        playerRb.AddForce(Vector3.up * jumpimgForce, ForceMode.Impulse);
+        animator.SetBool("isJump", false);
+        animator.SetBool("isFall", true);
+    }
+    void SetLandAnimationOff()
+    {
+        animator.SetBool("isLand", false);
     }
 }
