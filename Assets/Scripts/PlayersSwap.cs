@@ -9,11 +9,11 @@ public class PlayersSwap : MonoBehaviour
     public GameObject droid;
     private PlayerControllerTeo transportController;
     private bool isOnGround;
-    private GameObject droidDoll;
+    private GameObject droidSpawnPoint;
 
     void Start()
     {
-        droidDoll = GameObject.Find("PlayerDroidDoll");
+        droidSpawnPoint = GameObject.Find("DroidSpawnPoint");
         transportController = GameObject.Find("PlayerVehicle").GetComponent<PlayerControllerTeo>();
         SelectTransport();
     }
@@ -50,12 +50,8 @@ public class PlayersSwap : MonoBehaviour
     void SelectTransport()
     {
         vehicle.GetComponent<PlayerControllerTeo>().enabled = true;
-        //droid.GetComponent<DroidControllerTeo>().enabled = false;
         droid.GetComponent<PlayerControllerArt>().enabled = false;
         droid.SetActive(false);
-        droidDoll.SetActive(true);
-        Animation dr = droidDoll.GetComponent<Animation>();
-        //dr.Play("DroidDollGoIn");d
         character = vehicle;
         Invoke("ReadyAfterScriptInit", 0.1f);
     }
@@ -64,31 +60,20 @@ public class PlayersSwap : MonoBehaviour
         if (isOnGround)
         {
             transportController.VehicleStop();
-            DollExit();
+            ChangeDroid();
             vehicle.GetComponent<PlayerControllerTeo>().enabled = false;
-            //droid.GetComponent<DroidControllerTeo>().enabled = true;
             droid.GetComponent<PlayerControllerArt>().enabled = true;
         }
     }
-    void DollExit()
-    {
-        Debug.Log("DollExit");
-        Animation dr = droidDoll.GetComponent<Animation>();
-        dr.Play("DroidDollGoOut");
-        Invoke("ChangeDroid", 1);
-
-    }
     void Test()
     {
-        Animation dr = droidDoll.GetComponent<Animation>();
-        //dr.Play("DroidDollGoIn");
+        
     }
     void ChangeDroid()
     {
-        droid.transform.position = droidDoll.transform.position;
-        droid.transform.rotation = droidDoll.transform.rotation;
+        droid.transform.position = droidSpawnPoint.transform.position;
+        droid.transform.rotation = droidSpawnPoint.transform.rotation;
         droid.SetActive(true);
         character = droid;
-        droidDoll.SetActive(false);
     }
 }

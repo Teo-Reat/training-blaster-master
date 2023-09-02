@@ -11142,7 +11142,7 @@ Animator:
   m_GameObject: {fileID: 546999672}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 320b1c2af77554f99a1658df4a6d3d5c, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5041c4ebefacc4f54b347790ade6ec38, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -43739,6 +43739,14 @@ PrefabInstance:
     - target: {fileID: 8365261751599044254, guid: 82481f02e50ff41f78628932ed3abebc, type: 3}
       propertyPath: m_Name
       value: PlayerDroid
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365261751599044254, guid: 82481f02e50ff41f78628932ed3abebc, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8365261751599044254, guid: 82481f02e50ff41f78628932ed3abebc, type: 3}
+      propertyPath: m_TagString
+      value: Droid
       objectReference: {fileID: 0}
     - target: {fileID: 8549409633294767030, guid: 82481f02e50ff41f78628932ed3abebc, type: 3}
       propertyPath: m_RootOrder
