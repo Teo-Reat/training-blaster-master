@@ -11,6 +11,7 @@ public class CameraBehaviorTeo : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Physics.gravity = new Vector3(0, -9.81f * 1.5f, 0);
         playersSwap = GameObject.Find("GameBehavior").GetComponent<PlayersSwap>();
     }
 

@@ -11,6 +11,7 @@ TagManager:
   - Enemy
   - Bullet
   - Tank
+  - Droid
   layers:
   - Default
   - TransparentFX

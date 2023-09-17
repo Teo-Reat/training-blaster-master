@@ -16,9 +16,11 @@ public class GunScript : MonoBehaviour
     private float gunShootCost = 3  ;
     private EnergyGeneration energy;
     private PlayersSwap swapSript;
+    private GameBehaviorTeo gameBehavior;
 
     void Start()
     {
+        gameBehavior = GameObject.Find("GameBehavior").GetComponent<GameBehaviorTeo>();
         bullet.GetComponent<TrailRenderer>().time = trail_time;
         trail_mat.mainTexture = trail_tex;
         energy = GameObject.Find("PlayerVehicle").GetComponent<EnergyGeneration>();
@@ -51,7 +53,7 @@ public class GunScript : MonoBehaviour
     
     void Update()
     {
-        if (swapSript.character == swapSript.vehicle)
+        if (gameBehavior.isGameActive && swapSript.character == swapSript.vehicle)
         {
             GunLookAtMouse();
             if (Input.GetMouseButton(0)) Fire();
