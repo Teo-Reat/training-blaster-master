@@ -849,6 +849,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetState: {fileID: 1791224283}
   accuracy: 0.5
+  patroleState: {fileID: 1791224281}
 --- !u!114 &1791224281
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -881,7 +882,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   targetState: {fileID: 1791224281}
   idleTime: 4
-  test: 0
 --- !u!114 &1791224283
 MonoBehaviour:
   m_ObjectHideFlags: 0
