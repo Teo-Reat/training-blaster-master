@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,15 +12,11 @@ public class Patrole : State
     private void OnEnable() =>
         transform.LookAt(transform.position + new Vector3(waypoints[currentPoint].position.x, 0, 0));
 
-    void Update()
+    private void Update()
     {
         transform.position =
-            Vector3.MoveTowards(transform.position,
-                transform.position + new Vector3(waypoints[currentPoint].position.x, 0, 0), Time.deltaTime * speed);
+            Vector3.MoveTowards(transform.position, waypoints[currentPoint].position, Time.deltaTime * speed);
     }
 
-    private void OnDisable()
-    {
-        currentPoint = ++currentPoint % waypoints.Count;
-    }
+    private void OnDisable() => currentPoint = ++currentPoint % waypoints.Count;
 }

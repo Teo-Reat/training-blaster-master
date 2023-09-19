@@ -1,5 +1,3 @@
-using System;
-
 public class Idle : State
 {
     //start Anim here

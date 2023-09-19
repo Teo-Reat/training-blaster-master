@@ -1,18 +1,15 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Patrole))]
 public class PatroleToIdle : Transition
 {
     [SerializeField] private float accuracy;
-    private Patrole patroleState;
-    private void Start()
-    {
-        patroleState = GetComponent<Patrole>();
-    }
+    [SerializeField] private Patrole patroleState;
 
-    void Update()
+    private void Update()
     {
-        if (Vector3.Distance(transform.position, patroleState.CurrentDestination.transform.position) < accuracy)
+        var isNearWaypoint = Vector3.Distance(transform.position, patroleState.CurrentDestination.transform.position) <
+                             accuracy;
+        if (isNearWaypoint)
             NeedTransit = true;
     }
 }
