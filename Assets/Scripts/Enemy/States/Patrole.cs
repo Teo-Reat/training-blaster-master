@@ -12,7 +12,7 @@ public class Patrole : State
     private void OnEnable() =>
         transform.LookAt(transform.position + new Vector3(waypoints[currentPoint].position.x, 0, 0));
 
-    private void Update()
+    private void LateUpdate()
     {
         transform.position =
             Vector3.MoveTowards(transform.position, waypoints[currentPoint].position, Time.deltaTime * speed);
