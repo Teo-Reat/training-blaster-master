@@ -94,6 +94,7 @@ public class PlayerControllerArt : MonoBehaviour
     }
     void JumpUp()
     {
+        isJumping = true;
         animator.SetBool("isJump", true);
         Invoke("SetFallAnimationOn", 0.1f);
     }

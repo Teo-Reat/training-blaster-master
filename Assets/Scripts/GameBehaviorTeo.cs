@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,6 +6,7 @@ using UnityEngine.UI;
 
 public class GameBehaviorTeo : MonoBehaviour
 {
+    public bool useTimer = true;
     public bool isGameActive;
     public int timer;
     public GameObject titleScreen;
@@ -41,7 +41,8 @@ public class GameBehaviorTeo : MonoBehaviour
     {
         Debug.Log("Game Start Func");
         isGameActive = true;
-        StartCoroutine(SetGameOverTimer());
+        if(useTimer)
+            StartCoroutine(SetGameOverTimer());
         Time.timeScale = 1;
         titleScreen.SetActive(false);
         batteriesInfo.SetActive(true);
